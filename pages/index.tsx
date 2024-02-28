@@ -7,10 +7,11 @@ import ArrowRightIcon from "../icons/ArrowRight"
 import ScrollIcon from "../icons/Scroll"
 import { H1, P } from "../styles/Type"
 import { CleanPokemon } from "../types/Pokemon"
+import usePartyPokemon from "../hooks/usePartyPokemon"
 
 export async function getStaticProps() {
   const { getPokemon } = await import("./api/pokemon")
-  const { pokemon, totalPokemon } = await getPokemon()
+  const { pokemon, totalPokemon  } = await getPokemon()
 
   return {
     props: {
@@ -27,6 +28,8 @@ export default function Home({
   pokemon: CleanPokemon[]
   totalPokemon: number
 }) {
+  const mergedPokemon = usePartyPokemon()
+
   // TODO: Infinite scroll pagination
   return (
     <Container>
@@ -54,13 +57,11 @@ export default function Home({
           </div>
         </div>
         <div className="col-span-full row-start-2 lg:row-start-1 lg:col-span-1 lg:col-start-11 lg:sticky top-5 grid grid-cols-6 lg:grid-cols-1 gap-7">
-          {Array(6)
-            .fill("")
-            .map((_, i) => (
+          {mergedPokemon.map((pok, i) => (
               <Image
-                key={i}
-                src="/img/placeholder-ball.png"
-                alt=""
+                key={pok?.id ?? `_key${i}`}
+                src={pok?.image ?? '/img/placeholder-ball.png'}
+                alt={pok?.name ?? 'pokemon'}
                 width="83"
                 height="83"
                 className="opacity-40"

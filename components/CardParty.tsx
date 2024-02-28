@@ -4,17 +4,18 @@ import Image from "next/image"
 import { H2 } from "../styles/Type"
 import { CleanPokemon } from "../types/Pokemon"
 import React from "react"
-import { useAppDispatch, useAppSelector } from "../state/hooks"
-import { addToParty } from "../state/pokemonSlice"
-import { pokemonSelectors } from "../state/selectors"
+import { useAppDispatch } from "../state/hooks"
+import { removeFromParty } from "../state/pokemonSlice"
 
 // TODO: Card Styling
-export default function Card({ id, name, types, image }: CleanPokemon) {
+interface CardPartyProps {
+  poke?: CleanPokemon;
+}
+export default function CardParty({ poke }: CardPartyProps) {
   const dispatch = useAppDispatch();
-  const partyPokemon = useAppSelector(pokemonSelectors.partyPokemon)
-  const handleAddPokemon = () => {
-    if(partyPokemon.length < 6 && !partyPokemon.find(pokemon=>pokemon.id === id)){
-      dispatch(addToParty({id, name, types, image}))
+  const handleRemovePokemon = () => {
+    if(poke?.id){
+      dispatch(removeFromParty(poke.id))
     }
   }
 
@@ -24,32 +25,32 @@ export default function Card({ id, name, types, image }: CleanPokemon) {
       <button
         type="button"
         className="absolute inset-0 w-full h-full block z-10 cursor-pointer rounded-lg"
-        onClick={handleAddPokemon}
+        onClick={handleRemovePokemon}
       >
-        <span className="sr-only">Add {name} to Party</span>
+        <span className="sr-only">Add {poke?.name} to Party</span>
       </button>
       <div className="bg-white rounded-xl text-center">
         <Image
-          src={image}
-          alt={name}
+          src={poke?.image ?? '/img/placeholder-ball.png'}
+          alt={poke?.name ?? 'pokemon'}
           className="pixel-art"
           width="150"
           height="150"
           unoptimized
         />
-        {name !== undefined && (
+        {poke?.name !== undefined && (
           <>
             <div>
-              <div className="inline-block" title={`Pokemon ID Number: ${id}`}>
-                #{id}
+              <div className="inline-block" title={`Pokemon ID Number: ${poke?.id}`}>
+                #{poke?.id}
               </div>
             </div>
             <div>
-              <H2>{name}</H2>
+              <H2>{poke?.name}</H2>
             </div>
             <div>
               <ul>
-                {types.map((type) => (
+                {poke?.types?.map((type) => (
                   <li
                     className={clsx(
                       `bg-${type.toLowerCase()}`,

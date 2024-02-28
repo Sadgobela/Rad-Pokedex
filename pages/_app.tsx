@@ -4,6 +4,8 @@ import Head from "next/head"
 import "../styles/global.css"
 
 import Layout from "../components/Layout"
+import { Provider } from "react-redux"
+import { store } from "../state/store"
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -17,9 +19,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
         <link rel="prefetch" href="/img/pokeball-loader.gif" />
       </Head>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <Provider store={store}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </Provider>
     </>
   )
 }

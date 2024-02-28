@@ -4,8 +4,12 @@ import Container from "../components/Container"
 import Grid from "../components/Grid"
 import ArrowRightIcon from "../icons/ArrowRight"
 import { H1, H3 } from "../styles/Type"
+import CardParty from "../components/CardParty"
+import usePartyPokemon from "../hooks/usePartyPokemon"
 
 export default function PartyPage() {
+  const mergedPokemon = usePartyPokemon()
+
   return (
     <Container className="relative">
       <Grid>
@@ -15,8 +19,11 @@ export default function PartyPage() {
             your team
           </H1>
         </div>
+          {mergedPokemon?.map((mon) => (
+            <CardParty key={mon.id} poke={mon} />
+          ))}
         <div className="col-start-11 text-center">
-          <H3 as="p">0/6</H3>
+          <H3 as="p">{mergedPokemon.filter(p => p?.id).length}/6</H3>
           <Link
             href="/"
             passHref
