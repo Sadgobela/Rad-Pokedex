@@ -19,7 +19,7 @@ export default function Card({ id, name, types, image }: CleanPokemon) {
   }
 
   return (
-    <article className="col-span-6 lg:col-span-4 relative">
+    <article className="col-span-6 lg:col-span-4 relative mb-20 pokemonCard">
       {/* TODO: Handle adding to party */}
       <button
         type="button"
@@ -28,7 +28,7 @@ export default function Card({ id, name, types, image }: CleanPokemon) {
       >
         <span className="sr-only">Add {name} to Party</span>
       </button>
-      <div className="bg-white rounded-xl text-center">
+      <div className="bg-white rounded-xl text-center h-48 w-48">
         <Image
           src={image}
           alt={name}
@@ -37,34 +37,36 @@ export default function Card({ id, name, types, image }: CleanPokemon) {
           height="150"
           unoptimized
         />
-        {name !== undefined && (
-          <>
-            <div>
-              <div className="inline-block" title={`Pokemon ID Number: ${id}`}>
-                #{id}
+        <div className='cardContent'>
+          {name !== undefined && (
+            <>
+              <div>
+                <div className="inline-block w-14 h-6 rounded-full bg-zinc-100 text-slate-700" title={`Pokemon ID Number: ${id}`}>
+                  #{id}
+                </div>
               </div>
-            </div>
-            <div>
-              <H2>{name}</H2>
-            </div>
-            <div>
-              <ul>
-                {types.map((type) => (
-                  <li
-                    className={clsx(
-                      `bg-${type.toLowerCase()}`,
-                      "text-white",
-                      "inline-block"
-                    )}
-                    key={type}
-                  >
-                    {type}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </>
-        )}
+              <div>
+                <H2>{name}</H2>
+              </div>
+              <div>
+                <ul>
+                  {types.map((type) => (
+                    <li
+                      className={clsx(
+                        `bg-${type.toLowerCase()}`,
+                        "text-white",
+                        "inline-block"
+                      )}
+                      key={type}
+                    >
+                      {type}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </article>
   )

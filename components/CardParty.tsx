@@ -20,7 +20,7 @@ export default function CardParty({ poke }: CardPartyProps) {
   }
 
   return (
-    <article className="col-span-6 lg:col-span-4 relative">
+    <article className="col-span-6 lg:col-span-4 relative mb-14">
       {/* TODO: Handle adding to party */}
       <button
         type="button"
@@ -38,34 +38,36 @@ export default function CardParty({ poke }: CardPartyProps) {
           height="150"
           unoptimized
         />
-        {poke?.name !== undefined && (
-          <>
-            <div>
-              <div className="inline-block" title={`Pokemon ID Number: ${poke?.id}`}>
-                #{poke?.id}
+        <div className=''>
+          {poke?.name !== undefined && (
+            <>
+              <div>
+                <div className="inline-block" title={`Pokemon ID Number: ${poke?.id}`}>
+                  #{poke?.id}
+                </div>
               </div>
-            </div>
-            <div>
-              <H2>{poke?.name}</H2>
-            </div>
-            <div>
-              <ul>
-                {poke?.types?.map((type) => (
-                  <li
-                    className={clsx(
-                      `bg-${type.toLowerCase()}`,
-                      "text-white",
-                      "inline-block"
-                    )}
-                    key={type}
-                  >
-                    {type}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </>
-        )}
+              <div>
+                <H2>{poke?.name}</H2>
+              </div>
+              <div>
+                <ul>
+                  {poke?.types?.map((type) => (
+                    <li
+                      className={clsx(
+                        `bg-${type.toLowerCase()}`,
+                        "text-white",
+                        "inline-block"
+                      )}
+                      key={type}
+                    >
+                      {type}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </article>
   )
