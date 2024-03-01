@@ -3,23 +3,27 @@ import Image from "next/image"
 
 import { H2 } from "../styles/Type"
 import { CleanPokemon } from "../types/Pokemon"
-import React from "react"
+import React, { useState } from "react"
 import { useAppDispatch, useAppSelector } from "../state/hooks"
 import { addToParty } from "../state/pokemonSlice"
 import { pokemonSelectors } from "../state/selectors"
+import usePartyPokemon from "../hooks/usePartyPokemon"
 
 // TODO: Card Styling
 export default function Card({ id, name, types, image }: CleanPokemon) {
   const dispatch = useAppDispatch();
+  const [add, setAdd] = useState(false);
   const partyPokemon = useAppSelector(pokemonSelectors.partyPokemon)
   const handleAddPokemon = () => {
     if(partyPokemon.length < 6 && !partyPokemon.find(pokemon=>pokemon.id === id)){
       dispatch(addToParty({id, name, types, image}))
+      setAdd(true);
     }
+
   }
 
   return (
-    <article className="col-span-6 lg:col-span-4 relative mb-20 pokemonCard">
+    <article className={`col-span-6 lg:col-span-4 relative mb-20 pokemonCard ${add ? 'selected' : ''}`}>
       {/* TODO: Handle adding to party */}
       <button
         type="button"
@@ -28,7 +32,7 @@ export default function Card({ id, name, types, image }: CleanPokemon) {
       >
         <span className="sr-only">Add {name} to Party</span>
       </button>
-      <div className="bg-white rounded-xl text-center h-48 w-48">
+      <div className="rounded-xl text-center h-48 w-48">
         <Image
           src={image}
           alt={name}
@@ -41,14 +45,14 @@ export default function Card({ id, name, types, image }: CleanPokemon) {
           {name !== undefined && (
             <>
               <div>
-                <div className="inline-block w-14 h-6 rounded-full bg-zinc-100 text-slate-700" title={`Pokemon ID Number: ${id}`}>
-                  #{id}
+                <div className="inline-block w-14 h-6 rounded-full bg-zinc-100 text-slate-700 card-id" title={`Pokemon ID Number: ${id}`}>
+                  #00{id}
                 </div>
               </div>
               <div>
                 <H2>{name}</H2>
               </div>
-              <div>
+              <div className='mt-2'>
                 <ul>
                   {types.map((type) => (
                     <li

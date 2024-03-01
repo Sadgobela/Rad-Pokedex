@@ -14,7 +14,7 @@ export default function PartyPage() {
     <Container>
       <Grid className="items-start">
         <div className='col-span-full lg:col-start-2 lg:col-span-2 flex flex-col lg:min-h-[calc(100vh-300px)]'>
-          <div className="flex-grow flex items-center relative">
+          <div className="flex-grow flex items-top relative">
             <H1>
               Choose <br />
               your team
