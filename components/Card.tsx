@@ -17,13 +17,13 @@ export default function Card({ id, name, types, image }: CleanPokemon) {
   const handleAddPokemon = () => {
     if(partyPokemon.length < 6 && !partyPokemon.find(pokemon=>pokemon.id === id)){
       dispatch(addToParty({id, name, types, image}))
-      setAdd(true);
     }
-
   }
 
+  const isSelected = partyPokemon.find(pokemon=>pokemon.id === id);
+
   return (
-    <article className={`col-span-6 lg:col-span-4 relative mb-20 pokemonCard ${add ? 'selected' : ''}`}>
+    <article className={`col-span-6 lg:col-span-4 relative mb-20 pokemonCard ${isSelected ? 'selected' : ''}`}>
       {/* TODO: Handle adding to party */}
       <button
         type="button"
