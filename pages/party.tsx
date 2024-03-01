@@ -28,12 +28,12 @@ export default function PartyPage() {
             ))}
           </Grid>
         </div>
-          <div className="col-start-11 text-center">
+          <div className="col-start-11 text-center relative h-full">
             <H3 as="p">{mergedPokemon.filter(p => p?.id).length}/6</H3>
             <Link
               href="/"
               passHref
-              className="w-14 h-14 lg:w-20 lg:h-20 p-2.5 rounded-full bg-gulf hover:bg-surfie text-white mx-auto flex flex-col items-center justify-center font-serif text-[0.75rem] lg:text-[1.125rem] transition duration-300 fixed bottom-4 right-4 lg:static"
+              className="absolute left-0 right-0 w-14 h-14 lg:w-20 lg:h-20 p-2.5 rounded-full bg-gulf hover:bg-surfie text-white mx-auto flex flex-col items-center justify-center font-serif text-[0.75rem] lg:text-[1.125rem] transition duration-300 fixed bottom-4 right-4"
             >
               Dex
               <ArrowRightIcon className="block w-full h-2.5" />

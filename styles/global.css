@@ -146,8 +146,6 @@ html {
     top: -77px;
   }
   .pokemonCard{
-    width: 198px;
-    height: 200px;
     border: 2px solid rgba(255, 255, 255, 1);
     border-radius: 10px;
     display: flex;
@@ -180,8 +178,9 @@ html {
     align-content: center;
     justify-content: center;
     position: absolute;
-    bottom: -14px;
-    left: 80px;
+    bottom: -28px;
+    left: 50%;
+    transform: translate(-50%, -50%);
     cursor: pointer;
     z-index: 10;
   }
