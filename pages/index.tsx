@@ -8,6 +8,7 @@ import ScrollIcon from "../icons/Scroll"
 import { H1, P } from "../styles/Type"
 import { CleanPokemon } from "../types/Pokemon"
 import usePartyPokemon from "../hooks/usePartyPokemon"
+import { useEffect } from "react"
 
 export async function getStaticProps() {
   const { getPokemon } = await import("./api/pokemon")
@@ -30,7 +31,20 @@ export default function Home({
 }) {
   const mergedPokemon = usePartyPokemon()
 
-  // TODO: Infinite scroll pagination
+  useEffect(() => {
+    const handleLoadMore = () => {
+      if(window.scrollY + window.innerHeight + 100 >= document.documentElement.scrollHeight){
+        console.log('bla')
+      }
+    }
+
+    window.addEventListener('scroll', handleLoadMore, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll',handleLoadMore)
+    }
+  }, []);
+
   return (
     <Container>
       <Grid className="items-start">

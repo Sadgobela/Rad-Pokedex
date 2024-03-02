@@ -16,12 +16,13 @@ export default function Card({ id, name, types, image }: CleanPokemon) {
   const partyPokemon = useAppSelector(pokemonSelectors.partyPokemon)
   const handleAddPokemon = () => {
     if(partyPokemon.length < 6 && !partyPokemon.find(pokemon=>pokemon.id === id)){
-      dispatch(addToParty({id, name, types, image}))
+      dispatch(addToParty({id, name, types, image}));
     }
   }
 
   const isSelected = partyPokemon.find(pokemon=>pokemon.id === id);
 
+  console.log('isSelected', isSelected)
   return (
     <article className={`col-span-6 lg:col-span-4 relative mb-20 pokemonCard ${isSelected ? 'selected' : ''}`}>
       {/* TODO: Handle adding to party */}

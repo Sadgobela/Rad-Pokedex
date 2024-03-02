@@ -5,7 +5,7 @@ import "../styles/global.css"
 
 import Layout from "../components/Layout"
 import { Provider } from "react-redux"
-import { store } from "../state/store"
+import {   store } from "../state/store"
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
