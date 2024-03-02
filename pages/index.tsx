@@ -8,10 +8,12 @@ import ScrollIcon from "../icons/Scroll"
 import { H1, P } from "../styles/Type"
 import { CleanPokemon } from "../types/Pokemon"
 import usePartyPokemon from "../hooks/usePartyPokemon"
-import { useEffect } from "react"
-
+import { useEffect, useRef, useState } from "react"
+import { getPokemon } from './api/pokemon'
+import Spinner from "../icons/Spinner"
+import { useAppSelector } from "../state/hooks"
+import { pokemonSelectors } from "../state/selectors"
 export async function getStaticProps() {
-  const { getPokemon } = await import("./api/pokemon")
   const { pokemon, totalPokemon  } = await getPokemon()
 
   return {
@@ -29,19 +31,29 @@ export default function Home({
   pokemon: CleanPokemon[]
   totalPokemon: number
 }) {
+  const [localPokemon, setLocalPokemon] = useState(pokemon);
+  const [isLoading, setIsLoading] = useState(false);
+  const currentPage = useRef(1);
   const mergedPokemon = usePartyPokemon()
 
   useEffect(() => {
-    const handleLoadMore = () => {
+    const handleLoadMore = async () => {
       if(window.scrollY + window.innerHeight + 100 >= document.documentElement.scrollHeight){
-        console.log('bla')
+        setIsLoading(true);
+        window.removeEventListener('scroll', handleLoadMore)
+        currentPage.current += 1;
+        const response = await getPokemon(currentPage.current);
+        setLocalPokemon(prevState => [...prevState, ...response.pokemon]);
+        if(response.pokemon?.length){
+          window.addEventListener('scroll', handleLoadMore, { passive: true })
+        }
+        setIsLoading(false);
       }
     }
-
     window.addEventListener('scroll', handleLoadMore, { passive: true })
-
     return () => {
       window.removeEventListener('scroll',handleLoadMore)
+      currentPage.current = 1;
     }
   }, []);
 
@@ -62,15 +74,20 @@ export default function Home({
         </div>
         <div className="col-span-full lg:col-span-6">
           <Grid>
-            {pokemon?.map((mon) => (
+            {localPokemon?.map((mon) => (
               <Card key={mon.id} {...mon} />
             ))}
           </Grid>
+          {isLoading && (
+            <div className="loader flex justify-center">
+              <Spinner />
+            </div>
+          )}
           <div className="text-center my-5 text-[1.5rem]">
-            {pokemon.length}/{totalPokemon}
+          {localPokemon.length}/{totalPokemon}
           </div>
         </div>
-        <div className="col-span-full row-start-2 lg:row-start-1 lg:col-span-1 lg:col-start-11 lg:sticky top-5 grid grid-cols-6 lg:grid-cols-1 gap-7">
+        <div className="col-span-full row-start-2 lg:row-start-1 lg:col-span-1 lg:col-start-11 lg:sticky top-5 grid grid-cols-6 lg:grid-cols-1 lg:gap-5 gap-7">
           {mergedPokemon.map((pok, i) => (
               <Image
                 key={pok?.id ?? `_key${i}`}

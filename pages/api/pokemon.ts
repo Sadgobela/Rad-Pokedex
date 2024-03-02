@@ -76,23 +76,29 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // TODO: error handling
-  const params = req.query
+  try {
+    const params = req.query
 
-  const page = parseInt(params.page as string, 10) || 1
-  const pageSize = parseInt(params.page_size as string, 10) || PAGE_SIZE
+    const page = parseInt(params.page as string, 10) || 1
+    const pageSize = parseInt(params.page_size as string, 10) || PAGE_SIZE
 
-  const { pokemon, totalPokemon } = await getPokemon(page, pageSize)
+    const { pokemon, totalPokemon } = await getPokemon(page, pageSize)
 
-  res.setHeader("X-Max-Pokemon", totalPokemon)
-  res.setHeader("X-Max-Pages", Math.ceil(totalPokemon / pageSize))
+    res.setHeader("X-Max-Pokemon", totalPokemon)
+    res.setHeader("X-Max-Pages", Math.ceil(totalPokemon / pageSize))
 
-  res.statusCode = 200
-  res.setHeader("Content-Type", "application/json")
+    res.statusCode = 200
+    res.setHeader("Content-Type", "application/json")
 
-  res.setHeader(
-    "Cache-Control",
-    `public, max-age=${CACHE_AGE}, s-max-age=${CACHE_AGE}, stale-while-revalidate`
-  )
+    res.setHeader(
+      "Cache-Control",
+      `public, max-age=${CACHE_AGE}, s-max-age=${CACHE_AGE}, stale-while-revalidate`
+    )
 
-  res.end(JSON.stringify(pokemon))
+    res.end(JSON.stringify(pokemon))
+  } catch (e) {
+    res.statusCode = 500
+    res.statusMessage = 'Internal server error'
+    res.end()
+  }
 }

@@ -10,3 +10,7 @@ export type CleanPokemon = {
   types: string[]
   image: string
 }
+
+export type InPartyQuantity = {
+  [key: CleanPokemon['id']] : number;
+}

@@ -21,14 +21,14 @@ export default function PartyPage() {
             </H1>
           </div>
         </div>
-        <div className="col-span-full lg:col-span-6">
+        <div className="col-span-full lg:col-span-6 sm:mt-10">
           <Grid>
             {mergedPokemon?.map((mon) => (
               <CardParty key={mon.id} poke={mon} />
             ))}
           </Grid>
         </div>
-          <div className="col-start-11 text-center relative h-full">
+          <div className="col-start-11 text-center relative h-full max-lg:fixed max-lg:bottom-2.5 max-lg:right-10">
             <H3 as="p">{mergedPokemon.filter(p => p?.id).length}/6</H3>
             <Link
               href="/"

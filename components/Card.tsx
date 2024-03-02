@@ -3,9 +3,9 @@ import Image from "next/image"
 
 import { H2 } from "../styles/Type"
 import { CleanPokemon } from "../types/Pokemon"
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../state/hooks"
-import { addToParty } from "../state/pokemonSlice"
+import { addToParty, removeFromParty } from "../state/pokemonSlice"
 import { pokemonSelectors } from "../state/selectors"
 import usePartyPokemon from "../hooks/usePartyPokemon"
 
@@ -14,18 +14,22 @@ export default function Card({ id, name, types, image }: CleanPokemon) {
   const dispatch = useAppDispatch();
   const [add, setAdd] = useState(false);
   const partyPokemon = useAppSelector(pokemonSelectors.partyPokemon)
+  const inPartyQuantityData = useAppSelector(pokemonSelectors.inPartyQuantityData);
   const handleAddPokemon = () => {
     if(partyPokemon.length < 6 && !partyPokemon.find(pokemon=>pokemon.id === id)){
       dispatch(addToParty({id, name, types, image}));
     }
+    if(partyPokemon.find(pokemon=>pokemon.id === id)){
+      dispatch(removeFromParty(id));
+    }
   }
 
-  const isSelected = partyPokemon.find(pokemon=>pokemon.id === id);
+  const isSelected = useMemo(() => partyPokemon.find(pokemon=>pokemon.id === id), [partyPokemon, id]);
+  const partyQuantity = useMemo(() => inPartyQuantityData[id] ?? 0, [inPartyQuantityData, id]);
 
   console.log('isSelected', isSelected)
   return (
     <article className={`col-span-6 lg:col-span-4 relative mb-20 pokemonCard ${isSelected ? 'selected' : ''}`}>
-      {/* TODO: Handle adding to party */}
       <button
         type="button"
         className="absolute inset-0 w-full h-full block z-10 cursor-pointer rounded-lg"
@@ -69,6 +73,7 @@ export default function Card({ id, name, types, image }: CleanPokemon) {
                   ))}
                 </ul>
               </div>
+              <p>Added to party {partyQuantity} times</p>
             </>
           )}
         </div>
