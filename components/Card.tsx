@@ -3,29 +3,44 @@ import Image from "next/image"
 
 import { H2 } from "../styles/Type"
 import { CleanPokemon } from "../types/Pokemon"
-import React, { useMemo, useState } from "react"
+import React, { useMemo } from "react"
 import { useAppDispatch, useAppSelector } from "../state/hooks"
-import { addToParty, removeFromParty } from "../state/pokemonSlice"
+import { addToParty, addToDex } from "../state/pokemonSlice"
 import { pokemonSelectors } from "../state/selectors"
-import usePartyPokemon from "../hooks/usePartyPokemon"
 
 // TODO: Card Styling
 export default function Card({ id, name, types, image }: CleanPokemon) {
   const dispatch = useAppDispatch();
-  const [add, setAdd] = useState(false);
   const partyPokemon = useAppSelector(pokemonSelectors.partyPokemon)
-  const inPartyQuantityData = useAppSelector(pokemonSelectors.inPartyQuantityData);
+  const dexPokemon = useAppSelector(pokemonSelectors.dexPokemon)
+  // const inPartyQuantityData = useAppSelector(pokemonSelectors.inPartyQuantityData);
   const handleAddPokemon = () => {
     if(partyPokemon.length < 6 && !partyPokemon.find(pokemon=>pokemon.id === id)){
       dispatch(addToParty({id, name, types, image}));
     }
-    if(partyPokemon.find(pokemon=>pokemon.id === id)){
-      dispatch(removeFromParty(id));
+    if(partyPokemon.length >= 6 && dexPokemon.length < 6 && !dexPokemon.find(pokemon=>pokemon.id === id)){
+      dispatch(addToDex({id, name, types, image}));
+      console.log('DEX')
     }
   }
 
-  const isSelected = useMemo(() => partyPokemon.find(pokemon=>pokemon.id === id), [partyPokemon, id]);
-  const partyQuantity = useMemo(() => inPartyQuantityData[id] ?? 0, [inPartyQuantityData, id]);
+  const isSelected = useMemo(() => {
+        return partyPokemon.find(pokemon=>pokemon.id === id) ||  dexPokemon.find(dexPokemon=> dexPokemon.id === id)
+  }, [partyPokemon,dexPokemon, id]);
+  // const partyQuantity = useMemo(() => inPartyQuantityData[id] ?? 0, [inPartyQuantityData, id]);
+  const pokemonInWhichParty = useMemo(() => {
+    if(partyPokemon.find(pokemon=>pokemon.id === id) && dexPokemon.find(dexPokemon=> dexPokemon.id === id)) {
+      return "2 Parties"
+    }
+    if(partyPokemon.find(pokemon=>pokemon.id === id)) {
+      return "Ash's Party"
+    }
+    if(dexPokemon.find(dexPokemon=> dexPokemon.id === id)) {
+      return "Dex's Party"
+    }
+
+    return ''
+  }, [partyPokemon, dexPokemon, id])
 
   console.log('isSelected', isSelected)
   return (
@@ -73,7 +88,7 @@ export default function Card({ id, name, types, image }: CleanPokemon) {
                   ))}
                 </ul>
               </div>
-              <p>Added to party {partyQuantity} times</p>
+              {pokemonInWhichParty && <p>Added to {pokemonInWhichParty}</p>}
             </>
           )}
         </div>

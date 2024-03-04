@@ -5,18 +5,23 @@ import { H2 } from "../styles/Type"
 import { CleanPokemon } from "../types/Pokemon"
 import React from "react"
 import { useAppDispatch } from "../state/hooks"
-import { removeFromParty } from "../state/pokemonSlice"
+import { removeFromDex, removeFromParty } from "../state/pokemonSlice"
 import Link from "next/link"
 
 // TODO: Card Styling
 interface CardPartyProps {
   poke?: CleanPokemon;
+  partyType: "ash" | "dex"
 }
-export default function CardParty({ poke }: CardPartyProps) {
+export default function CardParty({ poke, partyType }: CardPartyProps) {
   const dispatch = useAppDispatch();
   const handleRemovePokemon = () => {
     if(poke?.id){
-      dispatch(removeFromParty(poke.id))
+      if( partyType === "ash" ){
+        dispatch(removeFromParty(poke.id))
+      } else if (partyType === "dex") {
+        dispatch(removeFromDex(poke.id))
+      }
     }
   }
 
